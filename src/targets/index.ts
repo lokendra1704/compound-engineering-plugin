@@ -4,16 +4,19 @@ import type { CodexBundle } from "../types/codex"
 import type { DroidBundle } from "../types/droid"
 import type { CursorBundle } from "../types/cursor"
 import type { PiBundle } from "../types/pi"
+import type { CopilotBundle } from "../types/copilot"
 import { convertClaudeToOpenCode, type ClaudeToOpenCodeOptions } from "../converters/claude-to-opencode"
 import { convertClaudeToCodex } from "../converters/claude-to-codex"
 import { convertClaudeToDroid } from "../converters/claude-to-droid"
 import { convertClaudeToCursor } from "../converters/claude-to-cursor"
 import { convertClaudeToPi } from "../converters/claude-to-pi"
+import { convertClaudeToCopilot } from "../converters/claude-to-copilot"
 import { writeOpenCodeBundle } from "./opencode"
 import { writeCodexBundle } from "./codex"
 import { writeDroidBundle } from "./droid"
 import { writeCursorBundle } from "./cursor"
 import { writePiBundle } from "./pi"
+import { writeCopilotBundle } from "./copilot"
 
 export type TargetHandler<TBundle = unknown> = {
   name: string
@@ -52,5 +55,11 @@ export const targets: Record<string, TargetHandler> = {
     implemented: true,
     convert: convertClaudeToPi as TargetHandler<PiBundle>["convert"],
     write: writePiBundle as TargetHandler<PiBundle>["write"],
+  },
+  copilot: {
+    name: "copilot",
+    implemented: true,
+    convert: convertClaudeToCopilot as TargetHandler<CopilotBundle>["convert"],
+    write: writeCopilotBundle as TargetHandler<CopilotBundle>["write"],
   },
 }

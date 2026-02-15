@@ -7,9 +7,10 @@ import { syncToCodex } from "../sync/codex"
 import { syncToPi } from "../sync/pi"
 import { syncToDroid } from "../sync/droid"
 import { syncToCursor } from "../sync/cursor"
+import { syncToCopilot } from "../sync/copilot"
 import { expandHome } from "../utils/resolve-home"
 
-const validTargets = ["opencode", "codex", "pi", "droid", "cursor"] as const
+const validTargets = ["opencode", "codex", "pi", "droid", "cursor", "copilot"] as const
 type SyncTarget = (typeof validTargets)[number]
 
 function isValidTarget(value: string): value is SyncTarget {
@@ -42,19 +43,21 @@ function resolveOutputRoot(target: SyncTarget): string {
       return path.join(os.homedir(), ".factory")
     case "cursor":
       return path.join(process.cwd(), ".cursor")
+    case "copilot":
+      return path.join(process.cwd(), ".github")
   }
 }
 
 export default defineCommand({
   meta: {
     name: "sync",
-    description: "Sync Claude Code config (~/.claude/) to OpenCode, Codex, Pi, Droid, or Cursor",
+    description: "Sync Claude Code config (~/.claude/) to OpenCode, Codex, Pi, Droid, Cursor, or Copilot",
   },
   args: {
     target: {
       type: "string",
       required: true,
-      description: "Target: opencode | codex | pi | droid | cursor",
+      description: "Target: opencode | codex | pi | droid | cursor | copilot",
     },
     claudeHome: {
       type: "string",
@@ -99,6 +102,9 @@ export default defineCommand({
         break
       case "cursor":
         await syncToCursor(config, outputRoot)
+        break
+      case "copilot":
+        await syncToCopilot(config, outputRoot)
         break
     }
 
